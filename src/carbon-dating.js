@@ -17,11 +17,43 @@ const HALF_LIFE_PERIOD = 5730;
  * dateSample('WOOT!') => false
  *
  */
-function dateSample(/* sampleActivity */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+function dateSample(sampleActivity) {
+	// Преобразование входного значения в число с плавающей точкой, если это строка
+	sampleActivity = parseFloat(sampleActivity);
+
+	// Проверка типа данных: должно быть число
+	if (isNaN(sampleActivity)) {
+		return false;
+	}
+
+	// Проверка, что параметр существует
+	if (sampleActivity === undefined || sampleActivity === null) {
+		return false;
+	}
+
+	// Проверка типа данных: должно быть число
+	if (typeof sampleActivity !== 'number' || isNaN(sampleActivity)) {
+		return false;
+	}
+
+	// Проверка, если sampleActivity равно 0 или меньше 0
+	if (sampleActivity <= 0 || sampleActivity > MODERN_ACTIVITY) {
+		return false;
+	}
+
+	// Расчёт ? (лямбда) и t (возраст)
+	const lam = Math.log(2) / HALF_LIFE_PERIOD;
+	const t = Math.log(MODERN_ACTIVITY / sampleActivity) / lam;
+
+	// Проверка на NaN или невозможность вычисления
+	if (isNaN(t) || t <= 0) {
+		return false;
+	}
+
+	// Возврат округленного возраста с плавающей точкой (с точностью до 10 знаков)
+	return parseFloat(Math.ceil(t.toFixed(10)));
 }
 
 module.exports = {
-  dateSample
+	dateSample
 };
